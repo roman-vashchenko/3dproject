@@ -53,13 +53,16 @@ const positions = [
   [2, 0.5, 2],
 ];
 
-positions.forEach((position) => {
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
-  cube.position.set(...position);
-  scene.add(cube);
-  cubes.push(cube);
-});
+function createCubes() {
+  positions.forEach((position) => {
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    cube.position.set(...position);
+    cubes.push(cube);
+  });
+}
+
+createCubes();
 
 camera.position.set(-1, 4, 5);
 camera.lookAt(scene.position);
@@ -80,10 +83,27 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-dragControls.addEventListener("dragstart", function () {
+dragControls.addEventListener("dragstart", () => {
   controls.enabled = false;
 });
 
-dragControls.addEventListener("dragend", function () {
+dragControls.addEventListener("dragend", () => {
   controls.enabled = true;
+});
+
+document.querySelector(".add-cube-btn").addEventListener("click", () => {
+  const cube = new THREE.Mesh(geometry, material);
+  scene.add(cube);
+  cube.position.set(
+    Math.floor(Math.random() * 10) - 5,
+    0.5,
+    Math.floor(Math.random() * 10) - 12
+  );
+  cubes.push(cube);
+});
+
+document.querySelector(".reset-cubes-btn").addEventListener("click", () => {
+  cubes.forEach((cube) => scene.remove(cube));
+  cubes.length = 0;
+  createCubes();
 });
